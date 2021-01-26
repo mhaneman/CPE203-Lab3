@@ -142,7 +142,8 @@ public class LogAnalyzer
       }
    }
 
-   private static void printViewsWithoutPurchase(final Map<String, List<View>> viewsFromSession,
+   private static void printViewsWithoutPurchase(final Map<String, List<String>> sessionsFromCustomer,
+                                                 final Map<String, List<View>> viewsFromSession,
                                                  final Map<String, List<Buy>> buysFromSession)
    {
       double totalViews = 0.0;
@@ -151,8 +152,17 @@ public class LogAnalyzer
       {
          if (buysFromSession.get(view.getKey()) == null)
          {
-            totalViewers++;
-            totalViews += view.getValue().size();
+               totalViewers++;
+               totalViews += view.getValue().size();
+         }
+      }
+
+      for(Map.Entry<String, List<String>> session: sessionsFromCustomer.entrySet())
+      {
+         for(String s: session.getValue())
+         {
+            if(viewsFromSession.get(s) == null)
+               totalViewers++;
          }
       }
       System.out.println("Average Views without Purchase: " + (totalViews / totalViewers));
@@ -225,7 +235,7 @@ public class LogAnalyzer
                                        final Map<String, List<View>> viewsFromSession,
                                        final Map<String, List<Buy>> buysFromSession)
    {
-      printViewsWithoutPurchase(viewsFromSession, buysFromSession);
+      printViewsWithoutPurchase(sessionsFromCustomer, viewsFromSession, buysFromSession);
       System.out.println("");
 
       printSessionPriceDifference(viewsFromSession, buysFromSession);
